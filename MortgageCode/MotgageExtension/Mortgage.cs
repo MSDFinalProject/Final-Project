@@ -39,20 +39,70 @@ namespace MotgageExtension
             {
                 // Obtain the target entity from the input parameters.
                 Entity Mortgage = (Entity)context.InputParameters["Target"];
+                Money MonthlyPayment=new Money();
                
 
                 try
                 {
-                    //// Using Query by Attribute
-                    //QueryByAttribute query = new QueryByAttribute();
-                    //query.EntityName = "new_configuration";
-                    //query.ColumnSet = new ColumnSet(new string[] { "new_value" });
-                    //query.AddAttributeValue("new_tax", "Federal Tax");
-                   
+                    
+                    Money Total = (Money)Mortgage.Attributes["project_monthlyamount"];
+                    int term= (int)Mortgage.Attributes["project_mortgageterm"];
+                    decimal Base;
+                    decimal Margin;
+                    int Risk=20;
+                    decimal Tax;
+                    
+                    // find the base apr
+                    QueryByAttribute query = new QueryByAttribute();
+                    query.EntityName = "project_configurations";
+                    query.ColumnSet = new ColumnSet(new string[] { "project_value" });
+                    query.AddAttributeValue("project_key", "APR");
+                    EntityCollection test = service.RetrieveMultiple(query);
+                    Entity apr = test.Entities.FirstOrDefault();
+                    Base = Convert.ToDecimal(apr.Attributes["project_value"])/100;
+
+                    // find the margin 
+                    QueryByAttribute query2 = new QueryByAttribute();
+                    query2.EntityName = "project_configurations";
+                    query2.ColumnSet = new ColumnSet(new string[] { "project_value" });
+                    query2.AddAttributeValue("project_key", "Margin");
+                    test = service.RetrieveMultiple(query2);
+                    Entity margin = test.Entities.FirstOrDefault();
+                    Margin = Convert.ToDecimal(margin.Attributes["project_value"]) / 100;
 
 
+                    
 
-                  
+                  Entity contact = service.Retrieve("contact", (Guid)Mortgage.Attributes["project_contactid"], new ColumnSet("name","address1_stateorprovidence"));
+                    //get tax baes on state
+                    if (Mortgage.Attributes["project_region"].ToString()=="canada")
+                    {
+                        query = new QueryByAttribute();
+                        query.EntityName = "project_configurations";
+                        query.ColumnSet = new ColumnSet(new string[] { "project_value" });
+                        query.AddAttributeValue("project_key", "Canada");
+                        test = service.RetrieveMultiple(query);
+                        apr= test.Entities.FirstOrDefault();
+                        Tax = Convert.ToDecimal(margin.Attributes["project_value"]) / 100;
+                        
+                    }
+                    else
+                    {
+                        query = new QueryByAttribute();
+                        query.EntityName = "project_taxe";
+                        query.ColumnSet = new ColumnSet(new string[] { "project_tax" });
+                        query.AddAttributeValue("project_state", contact.Attributes["address1_cityorprovidence"]);
+                        test = service.RetrieveMultiple(query);
+                        Entity tax = test.Entities.FirstOrDefault();
+                        Tax = Convert.ToDecimal(tax.Attributes["project_Tax"]) / 100;
+                    }
+
+                    decimal Interest = 12 * (term / 12);
+                    decimal APR = (Base+Margin) + (decimal)Math.Log(Risk) + Tax;
+                    decimal Rate = APR / 12;
+                    decimal pay = (Total.Value * Rate) / (decimal)(1 - (Math.Pow((double)(1 + Rate), (double)(-Interest))));
+                    MonthlyPayment.Value=pay;
+                    Console.WriteLine(pay);
                 }
 
                 catch (FaultException<OrganizationServiceFault> ex)
