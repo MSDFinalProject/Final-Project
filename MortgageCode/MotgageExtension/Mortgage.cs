@@ -40,8 +40,6 @@ namespace MotgageExtension
                 // Obtain the target entity from the input parameters.
                 Entity Mortgage = (Entity)context.InputParameters["Target"];
                 Money MonthlyPayment=new Money();
-               
-
                 try
                 {
                     
