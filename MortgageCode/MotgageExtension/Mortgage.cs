@@ -8,8 +8,11 @@ using System.ServiceModel;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Metadata;
+using System.Net;
+using System.IO;
+using Newtonsoft.Json.Linq;
 
-namespace MotgageExtension
+namespace MotgagePlugins
 {
     public class idk:IPlugin
     {
@@ -42,12 +45,20 @@ namespace MotgageExtension
                 Money MonthlyPayment=new Money();
                 try
                 {
-                    
+                    //WebRequest request = WebRequest.Create("http://localhost:64288/api/risk");
+                    //WebResponse response = request.GetResponse();
+                    //StreamReader reader = new StreamReader(response.GetResponseStream());
+                    //string responseString = reader.ReadToEnd();
+                    //reader.Close();
+                    //response.Close();
+                    //decimal RiskScore = Convert.ToDecimal(responseString);
+
+
                     Money Total = (Money)Mortgage.Attributes["project_monthlyamount"];
                     int term= (int)Mortgage.Attributes["project_mortgageterm"];
                     decimal Base;
                     decimal Margin;
-                    int Risk=20;
+                    int Risk=(int)Mortgage.Attributes["project_credit"];
                     decimal Tax;
                     
                     // find the base apr
@@ -68,8 +79,6 @@ namespace MotgageExtension
                     Entity margin = test.Entities.FirstOrDefault();
                     Margin = Convert.ToDecimal(margin.Attributes["project_value"]) / 100;
 
-
-                    
 
                   Entity contact = service.Retrieve("contact", (Guid)Mortgage.Attributes["project_contactid"], new ColumnSet("name","address1_stateorprovidence"));
                     //get tax baes on state

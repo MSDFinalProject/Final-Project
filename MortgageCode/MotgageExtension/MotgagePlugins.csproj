@@ -40,6 +40,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Dynamics_365\packages\Microsoft.CrmSdk.XrmTooling.PluginRegistrationTool.9.0.2.4\tools\Microsoft.Xrm.Sdk.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.ServiceModel" />
@@ -75,6 +78,7 @@
     <Content Include="bin\coretools\Newtonsoft.Json.dll" />
     <Content Include="bin\coretools\Other Redistributable.txt" />
     <Content Include="bin\coretools\SolutionPackager.exe" />
+    <Content Include="TextFile1.txt" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\Debug\" />

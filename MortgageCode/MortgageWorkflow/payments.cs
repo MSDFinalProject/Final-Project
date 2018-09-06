@@ -2,6 +2,7 @@
 using System.Activities;
 using System.Collections.Generic;
 using System.Linq;
+using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xrm.Sdk;
@@ -9,22 +10,23 @@ using Microsoft.Xrm.Sdk.Workflow;
 
 namespace MortgageWorkflow
 {
-    public class payments: CodeActivity
+    public class Payments: CodeActivity
     {
-        [RequiredArgument]
-        [Input("Mortgage")]
-        [ReferenceTarget("project_mortgage")]
-        public InArgument<EntityReference> MortgageReference { get; set; }
+        //[RequiredArgument]
+        //[Input("Mortgage")]
+        //[ReferenceTarget("project_mortgage")]
+        //public InArgument<EntityReference> MortgageReference { get; set; }
 
         [Input("project_mortgageamount")]
-        public InArgument<string> Amount { get; set; }
+        public InArgument<Int32> Amount { get; set; }
+        [Input("project_mortgageterm")]
+        public InArgument<Int32> Term { get; set; }
         [Input("project_monthlypayment")]
-        public InArgument<string> Payments { get; set; }
+        public InArgument<Money> MonthPayment { get; set; }
 
 
-
-        [Output("")]
-        public OutArgument<string> payment { get; set; }
+        //[Output("")]
+        //public OutArgument<string> apayment { get; set; }
 
         protected override void Execute(CodeActivityContext executionContext)
         {
@@ -37,15 +39,28 @@ namespace MortgageWorkflow
             IOrganizationService service = serviceFactory.CreateOrganizationService(context.UserId);
 
             //Read input from Argument
+            Entity apayment;
+            try { 
+            for (int m=0; m<Convert.ToInt32(Term);m++)
+            {
+                apayment = new Entity("project_mortgagepayment");
+                apayment.Attributes.Add("project_name", $"Payment Number{m+1} {DateTime.Now.AddMonths(m).ToString("MM/yyyy")} ");
+                apayment.Attributes.Add("project_duedate", DateTime.Now.AddMonths(m));
+                apayment.Attributes.Add("project_payment", MonthPayment);
+                apayment.Attributes.Add("project_paymentsid", new EntityReference(context.PrimaryEntityName,context.PrimaryEntityId));
+                service.Create(apayment);
+            }
+          }
+            catch (FaultException<OrganizationServiceFault> ex)
+            {
+                throw new InvalidPluginExecutionException("An error occurred in Payment Creation Workflow.", ex);
+            }
 
-            Entity payment = new Entity("project_mortgagepayment");
-            payment.Attributes.Add("project_name",DateTime.Now.AddMonths(0)+" Payment");
-            payment.Attributes.Add("project_duedate", DateTime.Now.AddMonths(0));
-            payment.Attributes.Add("project_payment",Payments);
-            payment.Attributes.Add("project_paymentsid",MortgageReference);
-            service.Create(payment);
-            
-
+            catch (Exception ex)
+            {
+                tracingService.Trace("Payment Creation: {0}", ex.ToString());
+                throw;
+            }
             //output
             //FormattedDescription.Set(executionContext, d);
         }
