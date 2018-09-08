@@ -16,13 +16,11 @@ namespace MortgageWorkflow
         //[Input("Mortgage")]
         //[ReferenceTarget("project_mortgage")]
         //public InArgument<EntityReference> MortgageReference { get; set; }
-
-        [Input("project_mortgageamount")]
-        public InArgument<Int32> Amount { get; set; }
+        
         [Input("project_mortgageterm")]
-        public InArgument<Int32> Term { get; set; }
+        public InArgument<int> Term { get; set; }
         [Input("project_monthlypayment")]
-        public InArgument<Money> MonthPayment { get; set; }
+        public InArgument<decimal> MonthPayment { get; set; }
 
 
         //[Output("")]
@@ -41,24 +39,24 @@ namespace MortgageWorkflow
             //Read input from Argument
             Entity apayment;
             try { 
-            for (int m=0; m<Convert.ToInt32(Term);m++)
+            for (int m=0; m<Term.Get<int>(executionContext);m++)
             {
                 apayment = new Entity("project_mortgagepayment");
                 apayment.Attributes.Add("project_name", $"Payment Number{m+1} {DateTime.Now.AddMonths(m).ToString("MM/yyyy")} ");
                 apayment.Attributes.Add("project_duedate", DateTime.Now.AddMonths(m));
-                apayment.Attributes.Add("project_payment", MonthPayment);
+                apayment.Attributes.Add("project_payment", MonthPayment.Get<decimal>(executionContext));
                 apayment.Attributes.Add("project_paymentsid", new EntityReference(context.PrimaryEntityName,context.PrimaryEntityId));
                 service.Create(apayment);
             }
           }
             catch (FaultException<OrganizationServiceFault> ex)
             {
-                throw new InvalidPluginExecutionException("An error occurred in Payment Creation Workflow.", ex);
+                throw new InvalidPluginExecutionException("An error occurred in Payment Creation Workflow." + ex.Message + "- " + ex.StackTrace, ex);
             }
 
             catch (Exception ex)
             {
-                tracingService.Trace("Payment Creation: {0}", ex.ToString());
+                tracingService.Trace("Payment Creation: {0}"+ex.Message+"- "+ex.StackTrace, ex.ToString());
                 throw;
             }
             //output

@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MortgageWorkflow", "Mortgag
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MortgageAPIs", "MortgageAPIs\MortgageAPIs.csproj", "{0905BC1B-CCC0-4287-B618-D92EFA15F14A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebOperations", "WebOperations\WebOperations.csproj", "{F3AA94CE-C6F3-4F8F-B93F-148C9FB291FB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{0905BC1B-CCC0-4287-B618-D92EFA15F14A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0905BC1B-CCC0-4287-B618-D92EFA15F14A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0905BC1B-CCC0-4287-B618-D92EFA15F14A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3AA94CE-C6F3-4F8F-B93F-148C9FB291FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3AA94CE-C6F3-4F8F-B93F-148C9FB291FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3AA94CE-C6F3-4F8F-B93F-148C9FB291FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3AA94CE-C6F3-4F8F-B93F-148C9FB291FB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
