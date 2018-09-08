@@ -1,0 +1,19 @@
+﻿#navbar1 {
+    background-color: #9697a5;
+}
+
+#navbrand{
+    color:black;
+}
+
+#navitem1, #navitem2, #navitem3{
+    color:black;
+}
+
+label{
+    font-size:25px;
+}
+
+h1 {
+    color: #9697a5;
+}
