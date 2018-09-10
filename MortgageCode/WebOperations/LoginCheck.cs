@@ -15,14 +15,40 @@ using System.Threading;
 
 namespace WebOperationsm
 {
-    public class LoginCheck
-    {
-        public string Exist(string user) {
-             CrmServiceClient client = new CrmServiceClient("Url=https://finalproject.crm.dynamics.com; Username=Jrusso@finalproject.onmicrosoft.com; Password=Hpesoj93; authtype=Office365");
-             IOrganizationService service = (IOrganizationService)client.OrganizationWebProxyClient ?? (IOrganizationService)client.OrganizationServiceProxy;
+    
 
-            string p = "password";
-            string u = "password";  
+    static public class LoginCheck
+    {
+        public static string name;
+        public static string id;
+        static public string Exist(string user)
+        {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            CrmServiceClient client = new CrmServiceClient("Url=https://finalproject.crm.dynamics.com; Username=Jrusso@finalproject.onmicrosoft.com; Password=Hpesoj93; authtype=Office365");
+             IOrganizationService service = (IOrganizationService)client.OrganizationWebProxyClient ?? (IOrganizationService)client.OrganizationServiceProxy;
+            bool usernameComplete = false; 
+            string p = "";
+            string u = ""; 
+
+            for (int i = 0; i < user.Length; i++)
+            {
+                if (user[i] ==',')
+                {
+                    usernameComplete = true;
+                    continue; 
+                }
+                else
+                {
+                    if (usernameComplete == false)
+                    {
+                        u += user[i]; 
+                    }
+                    else
+                    {
+                        p += user[i]; 
+                    }
+                }
+            } 
 
             string query = $@"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>  <entity name = 'contact' >
                             <attribute name='fullname' />
@@ -40,16 +66,20 @@ namespace WebOperationsm
                           </entity>
                         </fetch>";
             EntityCollection collection = service.RetrieveMultiple(new FetchExpression(query));
+
             if(collection.Entities.Count == 1 )
             {
+                Entity c=collection.Entities.FirstOrDefault();
+                name=c.Attributes["fullname"].ToString();
+                id=c.Attributes["contactid"].ToString();
                 return "true";
             }
             else
             {
                 return "false";
             }
-            
 
+           
         }
 
     }

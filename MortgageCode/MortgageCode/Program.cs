@@ -158,33 +158,57 @@ namespace MortgageCode
             //    throw new Exception("Errors!" + ex.StackTrace +ex.Message,ex);
             //}
             #endregion
+            string user = "JoeRusso,Password1234";
+            bool usernameComplete = false;
+            string p = "";
+            string u="";
 
-            string p ="password";
-            string u = "password";
-
-            string query = $@"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>  <entity name = 'contact' >
-                            <attribute name='fullname' />
-	                        <attribute name = 'parentcustomerid' />
-                            <attribute name='telephone1' />
-                            <attribute name = 'emailaddress1' />
-                            <attribute name='contactid' />
-                            <order attribute = 'fullname' descending='false' />
-                            <filter type = 'and' >
-                              <filter type='and'>
-                                <condition attribute = 'project_usename' operator='eq' value='{u}' />
-                                <condition attribute = 'project_password' operator='eq' value='{p}' />
-                              </filter>
-                            </filter>
-                          </entity>
-                        </fetch>";
-            EntityCollection collection = service.RetrieveMultiple(new FetchExpression(query));
-            foreach (Entity a in collection.Entities)
+            for (int i = 0; i < user.Length; i++)
             {
-                Console.WriteLine(collection.Entities.Count);
-                Console.WriteLine(a.Attributes["fullname"].ToString());
-                Console.WriteLine(a.Attributes["contactid"].ToString());
+                if (user[i] == ',')
+                {
+                    usernameComplete = true;
+                    continue;
+                }
+                else
+                {
+                    if (usernameComplete == false)
+                    {
+                        u += user[i];
+                    }
+                    else
+                    {
+                        p += user[i];
+                    }
+                }
             }
+            Console.WriteLine(u);
+            Console.WriteLine(p);
             Console.Read();
+
+            //string query = $@"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>  <entity name = 'contact' >
+            //                <attribute name='fullname' />
+	           //             <attribute name = 'parentcustomerid' />
+            //                <attribute name='telephone1' />
+            //                <attribute name = 'emailaddress1' />
+            //                <attribute name='contactid' />
+            //                <order attribute = 'fullname' descending='false' />
+            //                <filter type = 'and' >
+            //                  <filter type='and'>
+            //                    <condition attribute = 'project_usename' operator='eq' value='{u}' />
+            //                    <condition attribute = 'project_password' operator='eq' value='{p}' />
+            //                  </filter>
+            //                </filter>
+            //              </entity>
+            //            </fetch>";
+            //EntityCollection collection = service.RetrieveMultiple(new FetchExpression(query));
+            //foreach (Entity a in collection.Entities)
+            //{
+            //    Console.WriteLine(collection.Entities.Count);
+            //    Console.WriteLine(a.Attributes["fullname"].ToString());
+            //    Console.WriteLine(a.Attributes["contactid"].ToString());
+            //}
+            //Console.Read();
         }
     }
 }

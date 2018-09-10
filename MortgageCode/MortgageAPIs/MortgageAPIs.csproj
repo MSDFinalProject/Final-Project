@@ -285,6 +285,10 @@
     <Content Include="Scripts\jquery-3.3.1.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MortgageCode\MortgageCode.csproj">
+      <Project>{acf01472-ebe0-4625-8987-54fecc0cdedf}</Project>
+      <Name>MortgageCode</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WebOperations\WebOperations.csproj">
       <Project>{f3aa94ce-c6f3-4f8f-b93f-148c9fb291fb}</Project>
       <Name>WebOperations</Name>
