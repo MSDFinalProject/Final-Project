@@ -8,6 +8,7 @@ using System.Web.Http;
 using System.Web.Http.Cors;
 using Newtonsoft.Json;
 using System.Web.Http.Results;
+using WebOperationsm;
 
 namespace MortgageAPIs
 {
@@ -20,9 +21,9 @@ namespace MortgageAPIs
         {
             try
             {
-              
-                
-                return Ok();
+                LoginCheck L = new LoginCheck();
+                string user = L.Exist(login);
+                return Ok("Log in Successful");
 
             }
             catch (Exception ex)

@@ -94,7 +94,7 @@ namespace MortgageCode
 
             //    EntityReference c = (EntityReference)Mortgage.Attributes["project_contactid"];
             //    Entity contact = service.Retrieve("contact", c.Id, new ColumnSet("address1_stateorprovince"));
-                
+
             //    //get tax baes on state
             //   // Mortgage.Attributes["project_region"]
             //    if (Mortgage.GetAttribute‌​‌​Value<bool>("project_region") == true)
@@ -143,7 +143,7 @@ namespace MortgageCode
             //    Console.WriteLine("tax:" + Tax);
             //    Console.WriteLine("Final APR:" + APR);
             //    Console.WriteLine("rate:" + Rate);
-                
+
 
             //    Console.WriteLine("interest:" + (-Interest));
             //    Console.WriteLine("power: "+ (Math.Pow((double)(1 + Rate), (double)(-Interest))));
@@ -151,13 +151,40 @@ namespace MortgageCode
             //    Console.WriteLine(Math.Round(pay)/12);
             //    Console.Read();
             //}
-         
+
             //catch (Exception ex)
             //{
 
             //    throw new Exception("Errors!" + ex.StackTrace +ex.Message,ex);
             //}
             #endregion
+
+            string p ="password";
+            string u = "password";
+
+            string query = $@"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>  <entity name = 'contact' >
+                            <attribute name='fullname' />
+	                        <attribute name = 'parentcustomerid' />
+                            <attribute name='telephone1' />
+                            <attribute name = 'emailaddress1' />
+                            <attribute name='contactid' />
+                            <order attribute = 'fullname' descending='false' />
+                            <filter type = 'and' >
+                              <filter type='and'>
+                                <condition attribute = 'project_usename' operator='eq' value='{u}' />
+                                <condition attribute = 'project_password' operator='eq' value='{p}' />
+                              </filter>
+                            </filter>
+                          </entity>
+                        </fetch>";
+            EntityCollection collection = service.RetrieveMultiple(new FetchExpression(query));
+            foreach (Entity a in collection.Entities)
+            {
+                Console.WriteLine(collection.Entities.Count);
+                Console.WriteLine(a.Attributes["fullname"].ToString());
+                Console.WriteLine(a.Attributes["contactid"].ToString());
+            }
+            Console.Read();
         }
     }
 }

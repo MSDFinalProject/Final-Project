@@ -17,33 +17,36 @@ namespace WebOperationsm
 {
     public class LoginCheck
     {
-        public bool Exist(string user) {
+        public string Exist(string user) {
              CrmServiceClient client = new CrmServiceClient("Url=https://finalproject.crm.dynamics.com; Username=Jrusso@finalproject.onmicrosoft.com; Password=Hpesoj93; authtype=Office365");
              IOrganizationService service = (IOrganizationService)client.OrganizationWebProxyClient ?? (IOrganizationService)client.OrganizationServiceProxy;
 
-             string query = $@"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>  <entity name = 'contact' >
-                            < attribute name='fullname' />
+            string p = "password";
+            string u = "password";  
+
+            string query = $@"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>  <entity name = 'contact' >
+                            <attribute name='fullname' />
 	                        <attribute name = 'parentcustomerid' />
-                            < attribute name='telephone1' />
+                            <attribute name='telephone1' />
                             <attribute name = 'emailaddress1' />
-                            < attribute name='contactid' />
+                            <attribute name='contactid' />
                             <order attribute = 'fullname' descending='false' />
                             <filter type = 'and' >
-                              < filter type='and'>
-                                <condition attribute = 'project_usename' operator='eq' value='' />
-                                <condition attribute = 'project_password' operator='eq' value='' />
+                              <filter type='and'>
+                                <condition attribute = 'project_usename' operator='eq' value='{u}' />
+                                <condition attribute = 'project_password' operator='eq' value='{p}' />
                               </filter>
                             </filter>
                           </entity>
                         </fetch>";
             EntityCollection collection = service.RetrieveMultiple(new FetchExpression(query));
-            if(collection.TotalRecordCount == 1 )
+            if(collection.Entities.Count == 1 )
             {
-                return true;
+                return "true";
             }
             else
             {
-                return false;
+                return "false";
             }
             
 
