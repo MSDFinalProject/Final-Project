@@ -10,15 +10,16 @@ using Newtonsoft.Json;
 using System.Web.Http.Results;
 using WebOperationsm;
 
-namespace MortgageAPIs.Controllers
+namespace MortgageAPIs
 {
     [EnableCors("*", "*", "*")]
-    public class MortgageController: ApiController
+    public class MortgageController : ApiController
     {
         [HttpGet]
         public string Get()
         {
             return LoginCheck.MortgageGet();
+
         }
 
 
