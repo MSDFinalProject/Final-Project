@@ -4,78 +4,103 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Contact Support</title>
-    <link href="Styles/LoginPageStyle.css" rel="stylesheet" />
+    <link href="../Styles/ContactStyle.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <style>
+        body {
+            background-color: #e6f0ff;
+            background-image: url(https://static1.squarespace.com/static/56d1d0d6cf80a1640657c69b/t/59c9a5ae914e6b45b2afc0a6/1506387382554/8z+Mortgage+Background.png?format=1500w);
+            background-repeat: no-repeat;
+            background-attachment: inherit;
+            background-size: 1024px 728px;
+            background-position-x: center;
+            align-items: center;
+        }
+    </style>
+    <script src="../Javascript/Validation.js"></script>
+    <script src="../Javascript/AJAXCallContact.js"></script>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="ManageMorgagePage.html">Contoso Mortgage System</a>
+    <nav class="navbar navbar-expand-lg" id="navbar1">
+        <a class="navbar-brand" href="ManageMorgagePage.html">
+            <img src="../Pictures/Contoso Logo.png" width="40" height="30">
+        </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="ApplyForMortgagePage.html">Apply for Mortgage</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="ManageMorgagePage.html">Manage Mortgages</a>
-                </li>
                 <li class="nav-item active">
-                    <a class="nav-link" href="ContactSupportPage.html">Contact Support<span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="ApplyForMortgagePage.html" id="navitem1">Apply for Mortgage<span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="ViewSupportCasePage.html">View Support Cases</a>
+                    <a class="nav-link" href="ManageMorgagePage.html" id="navitem2">Manage Mortgages</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="ContactSupportPage.html" id="navitem3">Contact Support</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="ViewSupportCasePage.html" id="navitem4">View Support Cases</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="KBAPage.html" id="navitem5">Knowledge Based Articles</a>
                 </li>
             </ul>
         </div>
     </nav>
-    
-    <div class="container-fluid">
-        <h2 align="center">Create a Case</h2>
-        <form>
-            <div class="form-group">
-                <label for="inputSubject">Subject</label>
-                <input type="text" class="form-control" id="inputSubject" placeholder="Subject" required>
-            </div>
 
+    <div class="container-fluid">
+        <h1 align="center" style="color:#e6f2ff">Create a Case</h1>
+        <form>
             <div class="form-row">
+                <div class="form-group col-md-3"></div>
                 <div class="form-group col-md-6">
-                    <div class="form-group">
-                        <label for="inputFirstName">First Name</label>
-                        <input type="text" class="form-control" id="inputFirstName" placeholder="First Name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="inputLastName">Last Name</label>
-                        <input type="text" class="form-control" id="inputLastName" placeholder="Last Name" required>
-                    </div>
-                </div>
-                <div class="form-group col-md-6">
-                    <div class="form-group">
-                        <label for="inputPriority">Priority</label>
-                        <select class="form-control" id="inputPriority" required>
-                            <option value="" selected="selected">Select a Priority</option>
-                            <option>Low</option>
-                            <option>Medium</option>
-                            <option>High</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="inputPriorityReason">Priority Reason (For High Priority Only)</label>
-                        <input type="text" class="form-control" id="inputPriorityReason" placeholder="Priority Reason (For High Priority Only)" readonly />
-                    </div>
+                    <label for="inputSubject">Subject</label>
+                    <input type="text" class="form-control" id="inputSubject" placeholder="Subject" required>
                 </div>
             </div>
-            <div class="form-group">
-                <label for="inputDescription">Description</label>
-                <textarea class="form-control" id="inputDescription" rows="4" placeholder="Type here"></textarea>
+            <div class="form-row">
+                <div class="form-group col-md-3"></div>
+                <div class="form-group col-md-3">
+                    <label for="inputFirstName">First Name</label>
+                    <input type="text" class="form-control" id="inputFirstName" placeholder="First Name" required>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="inputLastName">Last Name</label>
+                    <input type="text" class="form-control" id="inputLastName" placeholder="Last Name" required>
+                </div>
             </div>
-            <a href="ManageCasePage.html" class="btn btn-primary">Submit</a>
+            <div class="form-row">
+                <div class="form-group col-md-3"></div>
+                <div class="form-group col-md-3">
+                    <label for="inputPriority">Priority</label>
+                    <select class="form-control" id="inputPriority" oninput="PriorityVal();" required>
+                        <option value="" selected="selected">Select a Priority</option>
+                        <option value="Low">Low</option>
+                        <option value="Medium">Medium</option>
+                        <option value="High">High</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="inputPriorityReason">Priority Reason (For High Priority Only)</label>
+                    <input type="text" class="form-control" id="inputPriorityReason" placeholder="Priority Reason (For High Priority Only)" disabled="disabled" />
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-3"></div>
+                <div class="form-group col-md-6">
+                    <label for="inputDescription">Description</label>
+                    <textarea class="form-control" id="inputDescription" rows="4" placeholder="Type here"></textarea>
+                </div>
+            </div>
+            <div align="center">
+                <button type="button" class="btn btn-primary" onclick="onCaseSubmit();">Submit</button>
+            </div>
         </form>
     </div>
-
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </body>
 </html>

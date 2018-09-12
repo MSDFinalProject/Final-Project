@@ -4,86 +4,102 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Manage Mortgages</title>
-    <link href="Styles/LoginPageStyle.css" rel="stylesheet" />
+    <link href="../Styles/ManageStyle.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <style>
+        body {
+            background-color: #e6f0ff;
+            background-image: url(https://static1.squarespace.com/static/56d1d0d6cf80a1640657c69b/t/59c9a5ae914e6b45b2afc0a6/1506387382554/8z+Mortgage+Background.png?format=1500w);
+            background-repeat: no-repeat;
+            background-attachment: inherit;
+            background-size: 1024px 728px;
+            background-position-x: center;
+            align-items: center;
+        }
+    </style>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script src="../Javascript/AJAXCallMortgage.js"></script>
 </head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="ManageMorgagePage.html">Contoso Mortgage System</a>
+<body >
+    <nav class="navbar navbar-expand-lg" id="navbar1">
+        <a class="navbar-brand" href="ManageMorgagePage.html">
+            <img src="../Pictures/Contoso Logo.png" width="40" height="30">
+        </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="ApplyForMortgagePage.html">Apply for Mortgage</a>
-                </li>
                 <li class="nav-item active">
-                    <a class="nav-link" href="ManageMorgagePage.html">Manage Mortgages<span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="ApplyForMortgagePage.html" id="navitem1">Apply for Mortgage<span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="ContactSupportPage.html">Contact Support</a>
+                    <a class="nav-link" href="ManageMorgagePage.html" id="navitem2">Manage Mortgages</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="ViewSupportCasePage.html">View Support Cases</a>
+                    <a class="nav-link" href="ContactSupportPage.html" id="navitem3">Contact Support</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="ViewSupportCasePage.html" id="navitem4">View Support Cases</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="KBAPage.html" id="navitem5">Knowledge Based Articles</a>
                 </li>
             </ul>
         </div>
     </nav>
-
     <div class="container-fluid">
-        <h2 align="center">My Mortgages</h2>
+        <h1 align="center" style="color:#e6f2ff">My Mortgages</h1>
         <br />
         <div class="row">
+            <div class="col-md-3"></div>
             <div class="col-md-6">
-                <table align="center" border="1" cellpadding="15">
+                <table align="center" id="mortgagesTable" border="1" cellpadding="15" style="color:#e6f2ff">
                     <tr>
                         <th id="displayNumber">Number</th>
                         <th id="displayName">Name</th>
                         <th id="displayTotalTerms">Total Terms</th>
                         <th id="displayBalance1">Balance</th>
                         <th id="displayPaymentDue">Monthly Payment Due</th>
-                        <th id="displayDueDate">Due Date</th>
-                    </tr>
-                    <tr>
-                        <td>Number</td>
-                        <td>Name</td>
-                        <td>Total Terms</td>
-                        <td>Balance</td>
-                        <td>Monthly Payment Due</td>
                     </tr>
                 </table>
             </div>
-            <div class="col-md-6">
+        </div>
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-7">
                 <form>
                     <div class="row">
-                        <div class="form-group col-sm-4">
-                            <label for="displayMortgages">Mortgage Payment</label>
+                        <div class="form-group col-md-4">
+                            <label for="displayMortgages">Select a Mortgage</label>
                             <select class="form-control" id="displayMortgages" required>
                                 <option value="" selected="selected">Select a Mortgage</option>
                             </select>
                         </div>
-                        <div class="form-group col-sm-5">
+                        <div class="form-group col-md-4">
                             <label for="displayBalance2">Balance</label>
                             <input type="number" class="form-control" id="displayBalance" readonly />
                             <label for="inputPaymentAmount">Payment Amount ($)</label>
-                            <input type="number" class="form-control" id="inputPaymentAmount" readonly/>
+                            <input type="number" class="form-control" id="inputPaymentAmount" readonly />
                             <label for="displayBalanceAfter">Balance After Payment</label>
                             <input type="number" class="form-control" id="displayBalanceAfter" readonly />
-                            <label for="displayDueDate">Due Date</label>
-                            <input type="date" class="form-control" id="displayDueDate" readonly />
+                            <!--<label for="displayDueDate">Due Date</label>
+                            <input type="date" class="form-control" id="displayDueDate" readonly />-->
                         </div>
-                        <div class="form-group col-sm-3">
-                            <a href="ManageMorgagePage.html" class="btn btn-primary" align="center">Make Payment</a>
+                        <div class="form-group col-md-4">
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                            <button type="button" class="btn btn-primary" id="paymentButton" onclick="onSubmitMortgage(this);">Make Payment</button> 
                         </div>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    
 </body>
 </html>
