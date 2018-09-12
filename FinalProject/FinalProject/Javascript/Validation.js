@@ -8,6 +8,15 @@
     }
 }
 
+function PriorityVal() {
+    if (document.getElementById("inputPriority").value == "High") {
+        document.getElementById("inputPriorityReason").disabled = false;
+    }
+    else {
+        document.getElementById("inputPriorityReason").disabled = true;
+        document.getElementById("inputPriorityReason").value = "";
+    }
+}
 
 function SSNVal() {
     if (!/^[0-9]+$/.test(document.querySelector("#inputSSN").value)) {
@@ -56,7 +65,7 @@ function MortgageAmountVal() {
         document.querySelector("#inputMortgageAmount").setCustomValidity("");
     }
 
-    if (document.querySelector("#inputMortgageAmount").value < "50000"){
+    if (document.querySelector("#inputMortgageAmount").value < 50000){
         document.querySelector("#inputMortgageAmount").setCustomValidity("Mortgage Amount must be greater than $50,000.");
     }
     else {
