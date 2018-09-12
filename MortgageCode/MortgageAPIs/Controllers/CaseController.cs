@@ -13,16 +13,21 @@ using WebOperationsm;
 namespace MortgageAPIs
 {
     [EnableCors("*", "*", "*")]
-    public class CaseContoller : ApiController
+    public class CaseController : ApiController
     {
         [HttpGet]
         public string Get() 
         {
-            return LoginCheck.CaseGet();
+            try { return LoginCheck.CaseGet();}
+            catch (Exception ex)
+            {
+                return ex.Message+"-- "+ex.StackTrace;
+            }
+
         }
 
         [HttpPost]
-        public IHttpActionResult Post(string p)
+        public IHttpActionResult Post([FromBody]string p)
         {
             try
             {

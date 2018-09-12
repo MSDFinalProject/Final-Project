@@ -34,10 +34,10 @@ namespace MortgageAPIs
         }
 
         [HttpPost]
-        public IHttpActionResult Post(string user)
+        public IHttpActionResult Post([FromBody]string query)
         {
             try {
-                LoginCheck.ContactPost(user);
+                LoginCheck.ContactPost(query);
                 return Ok("Contact Added");
             }
             catch (Exception ex)

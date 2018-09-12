@@ -24,6 +24,36 @@ namespace MortgageCode
             IOrganizationService service = (IOrganizationService)client.OrganizationWebProxyClient != null ? (IOrganizationService)client.OrganizationWebProxyClient : (IOrganizationService)client.OrganizationServiceProxy;
 
 
+
+            string xml = $@"<fetch distinct='false' mapping='logical' output-format='xml - platform' version='1.0'>
+                              <entity name = 'project_mortgagepayment' >
+                                   <attribute name = 'project_mortgagepaymentid' />
+                                   <attribute name = 'project_name' />
+                                   <attribute name = 'project_status' />
+                                   <attribute name = 'statuscode' />
+                                   <order descending = 'false' attribute = 'project_name' />
+                                   <filter type = 'and' >
+                                    <condition attribute = 'statecode' value = '0' operator= 'eq' />
+                                   </filter >
+                                   <link-entity name = 'project_mortgage' alias = 'ac' link-type = 'inner' to = 'project_paymentsid' from = 'project_mortgageid' >
+                                    <filter type = 'and'>
+                                        <condition attribute = 'project_mortgagenumbera' value = '001011201809' operator= 'eq' />
+                                     </filter>
+                                    </link-entity >
+                                   </entity >
+                                 </fetch > ";
+            EntityCollection collections = service.RetrieveMultiple(new FetchExpression(xml));
+            Entity pay = collections.Entities.FirstOrDefault();
+            //OptionSetValue state = new OptionSetValue();
+            //OptionSetValue status = new OptionSetValue();
+            //state.Value = 1; // inactive
+            //status.Value = -1; // default status for the state
+            pay.Attributes["project_status"] = true;
+            pay.Attributes["statuscode"] = new OptionSetValue(2);
+            pay.Attributes["statecode"] = new OptionSetValue(1);
+            service.Update(pay);
+
+
             #region MortgageNumber
             //UpdateAttributeRequest widgetSerialNumberAttributeRequest = new UpdateAttributeRequest
             //{
@@ -158,37 +188,37 @@ namespace MortgageCode
             //    throw new Exception("Errors!" + ex.StackTrace +ex.Message,ex);
             //}
             #endregion
-            string user = "JoeRusso,Password1234";
-            bool usernameComplete = false;
-            string p = "";
-            string u="";
+            //string user = "JoeRusso,Password1234";
+            //bool usernameComplete = false;
+            //string p = "";
+            //string u="";
 
-            for (int i = 0; i < user.Length; i++)
-            {
-                if (user[i] == ',')
-                {
-                    usernameComplete = true;
-                    continue;
-                }
-                else
-                {
-                    if (usernameComplete == false)
-                    {
-                        u += user[i];
-                    }
-                    else
-                    {
-                        p += user[i];
-                    }
-                }
-            }
-            Console.WriteLine(u);
-            Console.WriteLine(p);
-            Console.Read();
+            //for (int i = 0; i < user.Length; i++)
+            //{
+            //    if (user[i] == ',')
+            //    {
+            //        usernameComplete = true;
+            //        continue;
+            //    }
+            //    else
+            //    {
+            //        if (usernameComplete == false)
+            //        {
+            //            u += user[i];
+            //        }
+            //        else
+            //        {
+            //            p += user[i];
+            //        }
+            //    }
+            //}
+            //Console.WriteLine(u);
+            //Console.WriteLine(p);
+            //Console.Read();
 
             //string query = $@"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>  <entity name = 'contact' >
             //                <attribute name='fullname' />
-	           //             <attribute name = 'parentcustomerid' />
+            //             <attribute name = 'parentcustomerid' />
             //                <attribute name='telephone1' />
             //                <attribute name = 'emailaddress1' />
             //                <attribute name='contactid' />

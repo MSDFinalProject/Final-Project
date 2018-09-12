@@ -156,12 +156,12 @@ namespace MortgageWorkflow
             }
             catch (FaultException<OrganizationServiceFault> ex)
             {
-                throw new InvalidPluginExecutionException("An error occurred in RiskScore Workflow." + ex.StackTrace + " "+ex.Message , ex);
+                throw new InvalidPluginExecutionException("An error occurred in RiskScore Workflow!." + ex.StackTrace + " "+ex.Message+" "+ex.Source , ex);
             }
 
             catch (Exception ex)
             {
-                tracingService.Trace("RiskScore  + Creation: {0}"+ex.StackTrace+"  "+ ex.Message, ex.ToString());
+                tracingService.Trace("RiskScore  + Creation: {1}"+ex.StackTrace+"--"+ ex.Message+"--"+ex.Source+"---", ex.ToString());
                 throw;
             }
             

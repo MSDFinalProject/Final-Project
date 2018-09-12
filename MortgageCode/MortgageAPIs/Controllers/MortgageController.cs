@@ -18,24 +18,33 @@ namespace MortgageAPIs
         [HttpGet]
         public string Get()
         {
-            return LoginCheck.MortgageGet();
+            try
+            {
+                return LoginCheck.MortgageGet();
+            }
+            catch (Exception ex)
+            {
+                return ex.Message+" "+ex.StackTrace;
+            }
+
 
         }
 
 
         [HttpPost]
-        public IHttpActionResult Post(string p)
+        public IHttpActionResult Post([FromBody]string query)
         {
             try
             {
-                LoginCheck.MortgagePost(p);
+                LoginCheck.MortgagePost(query);
                 return Ok("Mortgage Added");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(ex.Message+" "+ex.StackTrace);
             }
 
         }
+
     }
 }

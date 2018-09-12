@@ -20,6 +20,7 @@ namespace WebOperationsm
     {
         public static string name;
         public static string id;
+        public static string mId;
 
         static public string Exist(string user)
         {
@@ -81,7 +82,7 @@ namespace WebOperationsm
             }
 
             
-        }//GetU
+        }//GetU//Working
 
         public static void ContactPost(string Contact)
         {
@@ -129,10 +130,12 @@ namespace WebOperationsm
             string xml = @"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>
                               <entity name='project_mortgage'>
                                 <attribute name='project_name' />
-                                <attribute name='createdon' />
+                                <attribute name='project_mortgageterm' />
                                 <attribute name='project_mortgageamount' />
                                 <attribute name='project_contactid' />
                                 <attribute name='project_mortgageid' />
+                                <attribute name='project_mortgagenumbera' />
+                                <attribute name='project_monthlypayment' />
                                 <order attribute='project_contactid' descending='false' />
                                 <filter type='and'>
                                   <condition attribute='statecode' operator='eq' value='0' />
@@ -146,22 +149,23 @@ namespace WebOperationsm
             Money M;
             foreach (Entity mortgage in collections.Entities)
             {
+                Console.WriteLine(name);
+                
                 EntityReference M_ContactId = (EntityReference)mortgage.Attributes["project_contactid"];
                 string m_c_name = M_ContactId.Name;
                 if (contactname.Equals(m_c_name))
                 {
-                   
                     mortgages += mortgage.Attributes["project_mortgagenumbera"].ToString() + ",";
                     mortgages += mortgage.Attributes["project_name"].ToString() + ",";
                     mortgages += mortgage.Attributes["project_mortgageterm"].ToString() + ",";
                     M = (Money)mortgage.Attributes["project_mortgageamount"];
                     mortgages += M.Value + ",";
-                    M = (Money)mortgage.Attributes["project_mortgagepayment"];
-                    mortgages += M.Value + ";";
+                    M = (Money)mortgage.Attributes["project_monthlypayment"];
+                    mortgages += M.Value + ",;";
                 }
             }
             return mortgages;
-        }//GetM
+        }//GetM//Working
 
         public static void MortgagePost(string data)
         {
@@ -171,13 +175,17 @@ namespace WebOperationsm
 
             if (data != null)
             {
-                ArrayList mortgage = new ArrayList();
+                string[] mortgage = new string[20];
                 string contents = "";
+                int x = 0;
                 for (int i = 0; i < data.Length; i++)
                 {
                     if (data[i] == ',')
                     {
-                        mortgage.Add(contents);
+                        
+                        mortgage[x]=contents;
+                        contents = "";
+                        x++;
                         continue;
                     }
                     else
@@ -187,11 +195,29 @@ namespace WebOperationsm
                 }
 
                 Entity mortgageRecord = new Entity("project_mortgage");
-                mortgageRecord.Attributes.Add("project_mortgageamount", mortgage.IndexOf(0));    //Currency
-                mortgageRecord.Attributes.Add("project_mortgageterm", mortgage.IndexOf(1));      //Whole Number
-                mortgageRecord.Attributes.Add("project_region", mortgage.IndexOf(2));            //Two Option
+                Money M = new Money(Convert.ToDecimal(mortgage[0].ToString()));
+                mortgageRecord.Attributes.Add("project_mortgageamount", M);    //Currency
+                mortgageRecord.Attributes.Add("project_mortgageterm", Convert.ToInt32(mortgage[1].ToString()));      //Whole Number
+                if (mortgage[2].Equals("US"))
+                {
+                   mortgageRecord.Attributes.Add("project_region",false);
+                }
+                else
+                {
+                    mortgageRecord.Attributes.Add("project_region", true);
+                }
+                           //Two Option
                 mortgageRecord.Attributes.Add("project_contactid",new  EntityReference("contact",new Guid(id)));
-                service.Create(mortgageRecord);
+                Random n = new Random();
+                mortgageRecord.Attributes.Add("project_name",name+"'S Mortgage "+ n.Next(0,99));
+                try
+                {
+                    service.Create(mortgageRecord);
+                }
+                catch (Exception e)
+                {
+                    throw new Exception(e.Message+"-"+e.StackTrace+"]");
+                }
             }//end if
 
         }//PostM
@@ -205,38 +231,60 @@ namespace WebOperationsm
             CrmServiceClient client = new CrmServiceClient("Url=https://finalproject.crm.dynamics.com; Username=Jrusso@finalproject.onmicrosoft.com; Password=Hpesoj93; authtype=Office365");
             IOrganizationService service = (IOrganizationService)client.OrganizationWebProxyClient ?? (IOrganizationService)client.OrganizationServiceProxy;
 
-            string xml = @"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>
-                              <entity name='project_mortgage'>
-                                <attribute name='project_name' />
-                                <attribute name='createdon' />
-                                <attribute name='project_mortgageamount' />
-                                <attribute name='project_contactid' />
-                                <attribute name='project_mortgageid' />
-                                <order attribute='project_contactid' descending='false' />
-                                <filter type='and'>
-                                  <condition attribute='statecode' operator='eq' value='0' />
-                                </filter>
-                              </entity>
+            string xml = @"<fetch distinct='false' mapping='logical' output-format='xml-platform' version='1.0'>
+	                            <entity name='incident'>
+	                            <attribute name='incidentid'/>
+	                            <attribute name='ticketnumber'/>
+	                            <attribute name='prioritycode'/>
+	                            <attribute name='title'/>
+	                            <attribute name='customerid'/>
+	                            <attribute name='ownerid'/>
+	                            <attribute name='statuscode'/>
+	                            <attribute name='statecode'/>
+	                            <attribute name='project_problemdescription'/>
+	                            <attribute name='project_priority'/>
+	                            <attribute name='project_highpriorityreason'/>
+	                            <attribute name='description'/>
+	                            <order descending='false' attribute='title'/>
+	                            <filter type='and'>
+		                            <condition attribute='statecode' value='0' operator='eq'/>
+	                            </filter>
+	                            </entity>
                             </fetch>";
             EntityCollection collections = service.RetrieveMultiple(new FetchExpression(xml));
 
             string cases = "";
             foreach (Entity incident in collections.Entities)
             {
-                EntityReference M_ContactId = (EntityReference)incident.Attributes["project_contactid"];
+                EntityReference M_ContactId = (EntityReference)incident.Attributes["customerid"];
                 string m_c_name = M_ContactId.Name;
                 if (contactname.Equals(m_c_name))
                 {
                     cases += incident.Attributes["ticketnumber"].ToString() + ",";
                     cases += incident.Attributes["title"].ToString() + ",";
-                    cases += incident.Attributes["project_priority"].ToString() + ",";
-                    cases += incident.Attributes["project_problemdescription"].ToString() + ",";
-                    cases += incident.Attributes["statecode"].ToString() + ";";
+                    OptionSetValue op = new OptionSetValue();
+                    op = (OptionSetValue)incident.Attributes["prioritycode"];
+                    var opValue = op.Value;
+                    if(opValue==1)
+                        cases += "High" + ",";//OPTION SET
+                    else if(opValue == 2)
+                        cases += "Normal" + ",";//OPTION SET
+                    else
+                        cases += "Low" + ",";//OPTION SET
+                    cases += incident.Attributes["description"].ToString() + ",";
+                    op = (OptionSetValue)incident.Attributes["statuscode"];
+                    opValue = op.Value;
+                    if (opValue == 1)
+                        cases += "Active" + ",";//OPTION SET
+                    else
+                        cases += "Inactive" + ",";//OPTION SET
+                    cases += op + ";";
+                    //cases += incident.Attributes["statecode"].ToString() + ";";
                 }
             }
 
             return cases;
-        }//GetC
+        }//GetC//Working
 
         public static void CasePost(string cases)
         {
@@ -267,24 +315,56 @@ namespace WebOperationsm
                 if (data.IndexOf(0) == 1)
                 {
                     caseRecord.Attributes.Add("title", data.IndexOf(1));
-                    caseRecord.Attributes.Add("project_priority", data.IndexOf(2));//optionset
-                    caseRecord.Attributes.Add("project_problemdescription", data.IndexOf(3));
-                    //add high priority reason if therre 
-                    caseRecord.Attributes.Add("primarycontactid", contactid);
+                    caseRecord.Attributes.Add("prioritycode", data.IndexOf(2));//optionset
+                    caseRecord.Attributes.Add("description", data.IndexOf(3));
+                    caseRecord.Attributes.Add("customerid", new EntityReference("contact", new Guid(id)));
                 }
-
-                //else 
-                caseRecord.Attributes.Add("title", data.IndexOf(0));
-                caseRecord.Attributes.Add("project_priority", data.IndexOf(1));//optionset
-                caseRecord.Attributes.Add("project_problemdescription", data.IndexOf(2));
-                //add high priority reason if therre 3
-                caseRecord.Attributes.Add("primarycontactid", contactid);
-                
+                else
+                {
+                    caseRecord.Attributes.Add("title", data.IndexOf(0));
+                    caseRecord.Attributes.Add("prioritycode", new OptionSetValue(data.IndexOf(1)));//optionset
+                    caseRecord.Attributes.Add("project_problemdescription", data.IndexOf(2));
+                    caseRecord.Attributes.Add("description", data.IndexOf(3));
+                    caseRecord.Attributes.Add("customerid", new EntityReference("contact", new Guid(id)));
+                }
                 service.Create(caseRecord);
                 
             }//end if
 
         }//PostC
+
+        public static string Paymentpay(string number)
+        {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            CrmServiceClient client = new CrmServiceClient("Url=https://finalproject.crm.dynamics.com; Username=Jrusso@finalproject.onmicrosoft.com; Password=Hpesoj93; authtype=Office365");
+            IOrganizationService service = (IOrganizationService)client.OrganizationWebProxyClient ?? (IOrganizationService)client.OrganizationServiceProxy;
+
+            string xml = $@"<fetch distinct='false' mapping='logical' output-format='xml - platform' version='1.0'>
+                              <entity name = 'project_mortgagepayment' >
+                                   <attribute name = 'project_mortgagepaymentid' />
+                                   <attribute name = 'project_name' />
+                                   <attribute name = 'project_status' />
+                                   <attribute name = 'statuscode' />
+                                   <order descending = 'false' attribute = 'project_name' />
+                                   <filter type = 'and' >
+                                    <condition attribute = 'statecode' value = '0' operator= 'eq' />
+                                   </filter >
+                                   <link-entity name = 'project_mortgage' alias = 'ac' link-type = 'inner' to = 'project_paymentsid' from = 'project_mortgageid' >
+                                    <filter type = 'and'>
+                                        <condition attribute = 'project_mortgagenumbera' value = '{number}' operator= 'eq' />
+                                     </filter>
+                                    </link-entity >
+                                   </entity >
+                                 </fetch > ";
+            EntityCollection collections = service.RetrieveMultiple(new FetchExpression(xml));
+            Entity pay=collections.Entities.FirstOrDefault();
+            pay.Attributes["project_status"] = true;
+            pay.Attributes["statuscode"] = new OptionSetValue(2);
+            pay.Attributes["statecode"] = new OptionSetValue(1);
+            service.Update(pay);
+            return pay.Attributes["project_name"].ToString()+" ";
+            //Entity payment =new Entity("project_mortgagepayment",)
+        }
 
 
     }
