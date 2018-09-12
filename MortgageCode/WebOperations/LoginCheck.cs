@@ -84,36 +84,42 @@ namespace WebOperationsm
             
         }//GetU//Working
 
-        public static void ContactPost(string Contact)
+        public static void ContactPost(string data)
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             CrmServiceClient client = new CrmServiceClient("Url=https://finalproject.crm.dynamics.com; Username=Jrusso@finalproject.onmicrosoft.com; Password=Hpesoj93; authtype=Office365");
             IOrganizationService service = (IOrganizationService)client.OrganizationWebProxyClient ?? (IOrganizationService)client.OrganizationServiceProxy;
 
-            if (Contact != null)
+            if (data != null)
             {
-                ArrayList data = new ArrayList();
+                string[] contact = new string[20];
                 string contents = "";
-                for (int i = 0; i < Contact.Length; i++)
+                int x = 0;
+                for (int i = 0; i < data.Length; i++)
                 {
-                    if (Contact[i] == ',')
+                    if (data[i] == ',')
                     {
-                        data.Add(contents);
+
+                        contact[x] = contents;
+                        contents = "";
+                        x++;
                         continue;
                     }
                     else
                     {
-                        contents += Contact[i];
+                        contents += data[i];
                     }
                 }
                 Entity contactRecord = new Entity("contact");
-                contactRecord.Attributes.Add("emailaddress1", data.IndexOf(0));
-                contactRecord.Attributes.Add("project_password", data.IndexOf(1));
+                string u = data[0].ToString();
+                contactRecord.Attributes.Add("emailaddress1",u);
+                contactRecord.Attributes.Add("project_usename", u);
+                contactRecord.Attributes.Add("project_password", data[1].ToString());
                 //Both First and Last name
-                contactRecord.Attributes.Add("fullname", data.IndexOf(2));
+                contactRecord.Attributes.Add("fullname", data[2].ToString());
                 //Both Address 1 and 2, city, state and zip
-                contactRecord.Attributes.Add("address1_composite", data.IndexOf(3));
-                contactRecord.Attributes.Add("project_socialsecuritynumber", data.IndexOf(4));
+                contactRecord.Attributes.Add("address1_composite", data[3].ToString());
+                contactRecord.Attributes.Add("project_socialsecuritynumber", data[4].ToString());
                 service.Create(contactRecord);
             }
         }//PostU

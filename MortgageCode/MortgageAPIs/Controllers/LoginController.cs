@@ -42,7 +42,7 @@ namespace MortgageAPIs
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(ex.Message+":::"+ex.StackTrace);
             }
         }
 
